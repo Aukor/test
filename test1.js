@@ -1,1 +1,1 @@
-console.log("test1")
+document.body.innerHTML += "<div>cos</div>"
