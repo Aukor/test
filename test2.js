@@ -1,1 +1,1 @@
-console.log(test2);
+document.body.style.backgroundColor = "red";
