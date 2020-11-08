@@ -1,4 +1,5 @@
-test.js
-tes2.js
-
-test6.js
+[
+  "test1.js",
+  "test2.js",
+  "test3.js"
+]
