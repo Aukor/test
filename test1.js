@@ -1,96 +1,99 @@
-function Company(result) {
-	if (typeof result == "undefined") {
-		return;
-	}
-	this.address = result.find('#MainContent_lblCorrespondenceAddress')[0].textContent;
-	this.email = result.find('#MainContent_lblEmail')[0].textContent;
-	this.webSite = result.find('#MainContent_lblWebstite')[0].textContent;
-	this.status = result.find('#MainContent_lblStatus')[0].textContent;
-}
+var AdditionalCompanyInformation = {
 
-function run() {
-	appendMaskToDocument();
-	var companyList = $('#MainContent_DataListEntities .searchITDiv2');
-	if (companyList.length >= 1) {
-		sendRequest(companyList);
-	} else {
-		alert("Lista firm jest pusta.\r\nProszę wyszukać co najmniej jedną firmę.")
-	}
-}
+	Company: function (result) {
+		if (typeof result == "undefined") {
+			return;
+		}
+		this.address = result.find('#MainContent_lblCorrespondenceAddress')[0].textContent;
+		this.email = result.find('#MainContent_lblEmail')[0].textContent;
+		this.webSite = result.find('#MainContent_lblWebstite')[0].textContent;
+		this.status = result.find('#MainContent_lblStatus')[0].textContent;
+	},
 
-function sendRequest(list) {
-	list.each(function(index, element) {
-		if ($(element).find('.additionalInformation').length > 0) return;
-		if ($('.lmask:visible'.length == 0)) $('.lmask').show();
+	run: function () {
+		this.appendMaskToDocument();
+		var companyList = $('#MainContent_DataListEntities .searchITDiv2');
+		if (companyList.length >= 1) {
+			this.sendRequest(companyList);
+		} else {
+			alert("Lista firm jest pusta.\r\nProszę wyszukać co najmniej jedną firmę.")
+		}
+	},
 
-	    var url = $(element).find('#MainContent_DataListEntities_divDetails_' + index + ' a')[0].href;
-	    var contentElement = $(element).find('#MainContent_DataListEntities_content_' + index);
-	    $.ajax({
-		    url: url,
-		    type: 'GET',
-		    dataType: 'html',
-	        success: function(result) {
-	            successRequest($(element), $(contentElement), $(result));
-	        }
-	    });
-	});
-}
+	sendRequest: function (list) {
+		list.each(function(index, element) {
+			if ($(element).find('.additionalInformation').length > 0) return;
+			if ($('.lmask:visible'.length == 0)) $('.lmask').show();
 
-function successRequest(element, contentElement, result) {
-    var company = new Company(result);
-    putInfoToRow(element, contentElement, company);
-}
+		    var url = $(element).find('#MainContent_DataListEntities_divDetails_' + index + ' a')[0].href;
+		    var contentElement = $(element).find('#MainContent_DataListEntities_content_' + index);
+		    $.ajax({
+			    url: url,
+			    type: 'GET',
+			    dataType: 'html',
+			success: function(result) {
+			    this.successRequest($(element), $(contentElement), $(result));
+			}
+		    });
+		});
+	},
 
-function putInfoToRow(element, contentElement, company) {
-	var info = 		"<br>";
-		info +=		"<div class='additionalInformation'>";
-		info +=			"<span class='address'>";
-		info +=				"<font class='searchITFont'>Adres: </font>";
-		info +=				"<span class='data'>" + company.address + "</span>";
-		info +=			"</span>";
-		info += 		"<br>";
-		info +=			"<span class='email'>";
-		info +=				"<font class='searchITFont'>E-mail: </font>";
-		info +=				"<span class='data'>" + company.email + "</span>";
-		info +=			"</span>";		
-		info += 		"<br>";
-		info +=			"<span class='webSite'>";
-		info +=				"<font class='searchITFont'>Strona internetowa: </font>";
-		info +=				"<a href='http://" + company.webSite + "' target='_blank'>" + company.webSite + "</a>";
-		info +=			"</span>";
-		info += 		"<br>";
-		info +=			"<span class='status'>";
-		info +=				"<font class='searchITFont'>Status: </font>";
-		info +=				"<span class='status " + addStatusClass(company.status) + "'>" + company.status + "</span>";
-		info +=			"</span>";
-		info +=		"</div>";
-	contentElement.append(info);
-	checkStatusAndEmail(element, company);
-	checkStatus(contentElement, company);
-}
+	successRequest: function (element, contentElement, result) {
+	    var company = new this.Company(result);
+	    this.putInfoToRow(element, contentElement, company);
+	},
 
-function addStatusClass(status) {
-	return status == "Aktywny" ? "activeStatus" : "inactiveStatus";
-}
+	putInfoToRow: function (element, contentElement, company) {
+		var info = 		"<br>";
+			info +=		"<div class='additionalInformation'>";
+			info +=			"<span class='address'>";
+			info +=				"<font class='searchITFont'>Adres: </font>";
+			info +=				"<span class='data'>" + company.address + "</span>";
+			info +=			"</span>";
+			info += 		"<br>";
+			info +=			"<span class='email'>";
+			info +=				"<font class='searchITFont'>E-mail: </font>";
+			info +=				"<span class='data'>" + company.email + "</span>";
+			info +=			"</span>";		
+			info += 		"<br>";
+			info +=			"<span class='webSite'>";
+			info +=				"<font class='searchITFont'>Strona internetowa: </font>";
+			info +=				"<a href='http://" + company.webSite + "' target='_blank'>" + company.webSite + "</a>";
+			info +=			"</span>";
+			info += 		"<br>";
+			info +=			"<span class='status'>";
+			info +=				"<font class='searchITFont'>Status: </font>";
+			info +=				"<span class='status " + this.addStatusClass(company.status) + "'>" + company.status + "</span>";
+			info +=			"</span>";
+			info +=		"</div>";
+		contentElement.append(info);
+		this.checkStatusAndEmail(element, company);
+		this.checkStatus(contentElement, company);
+	},
 
-function checkStatusAndEmail(element, company) {
-	var email = company.email;
-	var status = company.status;
-	if (email != "-" && status != "Nieaktywny" && status != "Zawieszony") {
-		element.css('background-color', 'rgb(162 255 151)');
-	}
-}
+	addStatusClass: function (status) {
+		return status == "Aktywny" ? "activeStatus" : "inactiveStatus";
+	},
 
-function checkStatus(contentElement, company) {
-	var status = company.status;
-	if (status == "Nieaktywny" || status == "Zawieszony") {
-		contentElement.css('filter', 'opacity(0.4)');
-	}
-}
+	checkStatusAndEmail: function (element, company) {
+		var email = company.email;
+		var status = company.status;
+		if (email != "-" && status != "Nieaktywny" && status != "Zawieszony") {
+			element.css('background-color', 'rgb(162 255 151)');
+		}
+	},
 
-function appendMaskToDocument() {
-	if ($('.lmask').length < 1) {
-		document.body.innerHTML += "<div class='lmask' style='display: none;'></div>";
+	checkStatus: function (contentElement, company) {
+		var status = company.status;
+		if (status == "Nieaktywny" || status == "Zawieszony") {
+			contentElement.css('filter', 'opacity(0.4)');
+		}
+	},
+
+	appendMaskToDocument: function () {
+		if ($('.lmask').length < 1) {
+			document.body.innerHTML += "<div class='lmask' style='display: none;'></div>";
+		}
 	}
 }
 
