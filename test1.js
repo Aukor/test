@@ -1,15 +1,11 @@
-class Company {
-
-    constructor(result) {
-    	if (typeof result == "undefined") {
-    		return;
-    	}
-        this.address = result.find('#MainContent_lblCorrespondenceAddress')[0].textContent;
-        this.email = result.find('#MainContent_lblEmail')[0].textContent;
-        this.webSite = result.find('#MainContent_lblWebstite')[0].textContent;
-        this.status = result.find('#MainContent_lblStatus')[0].textContent;
-    }
-
+function Company(result) {
+	if (typeof result == "undefined") {
+		return;
+	}
+	this.address = result.find('#MainContent_lblCorrespondenceAddress')[0].textContent;
+	this.email = result.find('#MainContent_lblEmail')[0].textContent;
+	this.webSite = result.find('#MainContent_lblWebstite')[0].textContent;
+	this.status = result.find('#MainContent_lblStatus')[0].textContent;
 }
 
 function run() {
